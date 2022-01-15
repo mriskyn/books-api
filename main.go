@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gofiber/fiber"
 	"github.com/jinzhu/gorm"
@@ -22,7 +23,7 @@ func setupRoutes(app *fiber.App) {
 	app.Delete("api/v1/book/:id", book.DeleteBook)
 }
 
-func initDatabase(){
+func initDatabase() {
 	var err error
 
 	database.DBConn, err = gorm.Open("sqlite3", "books.db")
@@ -39,13 +40,17 @@ func initDatabase(){
 
 func main() {
 	app := fiber.New()
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3333"
+	}
 
 	initDatabase()
 	defer database.DBConn.Close()
 
-
 	app.Get("/", helloWorld)
 	setupRoutes(app)
 
-	app.Listen("localhost:3333")
+	app.Listen(port)
 }
