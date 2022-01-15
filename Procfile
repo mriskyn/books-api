@@ -1,1 +1,1 @@
-web: books-api
+web: ./books-api.git
